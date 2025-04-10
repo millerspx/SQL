@@ -1,0 +1,202 @@
+create database food;
+go
+use food;
+
+create table cliente(
+    id_cliente int identity(1,1) primary key
+);
+
+create table funcionario(
+    id_funcionario int identity(1,1) primary key
+);
+
+create table endereco(
+    id_endereco int identity(1,1) primary key,
+    endereco_estado varchar(50),
+    endereco_cidade varchar(50),
+    endereco_bairro varchar(50),
+    endereco_rua varchar(50),
+    endereco_logadouro varchar(50)
+);
+
+create table pessoa(
+    id_pessoa int identity(1,1) primary key,
+    id_endereco int foreign key(id_endereco) references endereco(id_endereco),
+    nome_pessoa varchar(50),
+    cpf_pessoa char(11),
+    data_nasc date,
+    telefone_pessoa char(12),
+    email_pessoa varchar(50)
+);
+
+create table hamburguer(
+    id_hamburguer int identity(1,1) primary key,
+    pao varchar(25),
+    ovo varchar(25),
+    bacon varchar(25),
+    maionese varchar(25),
+    queijo varchar(25),
+    hamburguer varchar(25),
+    presunto varchar(25),
+    alface varchar(25),
+    tomate varchar(25)
+);
+
+create table batata_frita(
+    id_batata_frita int identity(1,1) primary key,
+    batata_frita varchar(25)
+);
+
+create table bebidas(
+    id_bebidas int identity(1,1) primary key,
+    agua varchar(25),
+    coca_cola varchar(25),
+    guarana_refri varchar(25),
+    guarana_natural varchar(25)
+);
+
+create table estoque(
+    id_estoque int identity(1,1) primary key,
+    id_hamburguer int foreign key(id_hamburguer) references hamburguer(id_hamburguer),
+    id_batata_frita int foreign key(id_batata_frita) references batata_frita(id_batata_frita),
+    id_bebidas int foreign key(id_bebidas) references bebidas(id_bebidas)
+);
+
+create table lanche(
+    id_lanche int identity(1,1) primary key,
+    id_estoque int foreign key(id_estoque) references estoque(id_estoque)
+);
+
+create table pedido(
+    id_pedido int identity(1,1) primary key,
+    id_pessoa int foreign key(id_pessoa) references pessoa(id_pessoa),
+    tipo_entrega char(1), -- 'D' para delivery, 'N' para não delivery
+    id_lanche int foreign key(id_lanche) references lanche(id_lanche),
+    tipo_pagamento money
+);
+
+--Para a Consulta de Endereços cadastrados
+
+insert into endereco (endereco_estado, endereco_cidade, endereco_bairro, endereco_rua, endereco_logadouro)
+values 
+('RJ', 'Rio de Janeiro', 'Copacabana', 'Av. Atlântica', '1234'),
+('RJ', 'Rio de Janeiro', 'Barra da Tijuca', 'Av. das Américas', '5678'),
+('RJ', 'Rio de Janeiro', 'Tijuca', 'Rua Conde de Bonfim', '910'),
+('RJ', 'Rio de Janeiro', 'Botafogo', 'Rua Voluntários da Pátria', '432'),
+('RJ', 'Rio de Janeiro', 'Ipanema', 'Rua Visconde de Pirajá', '234'),
+('RJ', 'Rio de Janeiro', 'Lapa', 'Av. Mem de Sá', '876'),
+('RJ', 'Rio de Janeiro', 'Leblon', 'Rua Dias Ferreira', '1010'),
+('RJ', 'Rio de Janeiro', 'Santa Teresa', 'Rua Almirante Alexandrino', '789'),
+('RJ', 'Rio de Janeiro', 'Recreio dos Bandeirantes', 'Rua Gláucio Gil', '555');
+
+--Para o Cadastro de Pessoas 
+
+insert into pessoa (id_endereco, nome_pessoa, cpf_pessoa, data_nasc, telefone_pessoa, email_pessoa)
+values
+(1, 'João Silva', '12345678901', '1990-05-20', '21912345678', 'joao.silva@email.com'),
+(2, 'Maria Oliveira', '98765432100', '1985-08-15', '21987654321', 'maria.oliveira@email.com'),
+(3, 'Carlos Lima', '11122233344', '2000-01-10', '21988887777', 'carlos.lima@email.com'),
+(4, 'Ana Beatriz Costa', '22233344455', '1995-11-12', '21944445555', 'ana.costa@email.com'),
+(5, 'Felipe Andrade', '33344455566', '1988-03-22', '21933334444', 'felipe.andrade@email.com'),
+(6, 'Juliana Rocha', '44455566677', '1992-07-09', '21922223333', 'juliana.rocha@email.com'),
+(7, 'Marcos Souza', '55566677788', '1980-12-01', '21911112222', 'marcos.souza@email.com'),
+(8, 'Larissa Martins', '66677788899', '1999-04-17', '21900001111', 'larissa.martins@email.com'),
+(9, 'Paulo César Mendes', '77788899900', '1993-06-30', '21999990000', 'paulo.mendes@email.com');
+
+--Para inserir Clientes e Funcionarios
+
+insert into cliente (id_pessoa) values (1), (3);
+insert into funcionario (id_pessoa) values (2);
+
+--Para inserir Hamburguer
+
+insert into hamburguer (pao, ovo, bacon, maionese, queijo, hamburguer, presunto, alface, tomate)
+values
+('Pão brioche', '1 ovo', '2 fatias', 'Maionese caseira', 'Queijo cheddar', 'Hamburguer bovino', 'Presunto', 'Alface', 'Tomate'),
+('Pão tradicional', 'Sem ovo', '1 fatia', 'Sem maionese', 'Mussarela', 'Hamburguer frango', 'Sem presunto', 'Sem alface', 'Tomate');
+
+-- Para inserir Batatas
+
+insert into batata_frita (batata_frita)
+values 
+('Batata palito'),
+('Batata rustica');
+
+
+--Para inserir Bebidas
+
+insert into bebidas (agua, coca_cola, guarana_refri, guarana_natural)
+values
+('Sim', 'Não', 'Sim', 'Não'),
+('Não', 'Sim', 'Não', 'Sim');
+
+-- Inserindo o estoque
+
+insert into estoque (id_hamburguer, id_batata_frita, id_bebidas)
+values 
+(1, 1, 1),
+(2, 2, 2);
+
+-- Inzserindo o Lanche
+
+insert into lanche (id_estoque)
+values 
+(1),
+(2);
+
+-- Inserindo os pedidos
+
+insert into pedido (id_pessoa, tipo_entrega, id_lanche, tipo_pagamento)
+values
+(1, 'D', 1, 29.90),
+(3, 'B', 2, 24.50);
+
+-- Consulta com Dados de Pedidos e Lanches
+--Fiz assim para poder trabalhar com dados separadamente
+
+SELECT 
+    pessoa.nome_pessoa,
+    pedido.tipo_entrega,
+    pedido.tipo_pagamento,
+    hamburguer.pao AS tipo_pao,
+    hamburguer.hamburguer AS tipo_hamburguer
+FROM pedido
+INNER JOIN pessoa ON pedido.id_pessoa = pessoa.id_pessoa
+INNER JOIN lanche ON pedido.id_lanche = lanche.id_lanche
+INNER JOIN estoque ON lanche.id_estoque = estoque.id_estoque
+INNER JOIN hamburguer ON estoque.id_hamburguer = hamburguer.id_hamburguer;
+
+--Consulta de media de pedidos por pessoa
+
+SELECT 
+    pessoa.nome_pessoa,
+    AVG(pedido.tipo_pagamento) AS media_valor_pedido
+FROM pedido
+INNER JOIN pessoa ON pedido.id_pessoa = pessoa.id_pessoa
+GROUP BY pessoa.nome_pessoa;
+
+--Media de peddidos a cima de R$30 no delivery
+
+SELECT 
+    pessoa.nome_pessoa,
+    AVG(pedido.tipo_pagamento) AS media_valor
+FROM pedido
+INNER JOIN pessoa ON pedido.id_pessoa = pessoa.id_pessoa
+WHERE pedido.tipo_entrega = 'D'
+GROUP BY pessoa.nome_pessoannn
+HAVING AVG(pedido.tipo_pagamento) > 30;
+
+-- Consulta mas detalhada Mostra nome do cliente, bebida, tipo de batata e tipo de hambúrguer:
+
+select 
+    p.nome_pessoa,
+    b.coca_cola,
+    bf.batata_frita,
+    h.hamburguer
+from pedido pd
+inner join pessoa p on pd.id_pessoa = p.id_pessoa
+inner join lanche l on pd.id_lanche = l.id_lanche
+inner join estoque e on l.id_estoque = e.id_estoque
+inner join bebidas b on e.id_bebidas = b.id_bebidas
+inner join batata_frita bf on e.id_batata_frita = bf.id_batata_frita
+inner join hamburguer h on e.id_hamburguer = h.id_hamburguer;
